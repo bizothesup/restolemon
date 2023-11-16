@@ -19,8 +19,8 @@ export default function Footer() {
         </div>
         <div>
             <h4>Contact</h4>
-            <p>97 Bob Junction</p>
-            <p>+31 505 256 2654</p>
+            <p>3 rue Odette Planchet</p>
+            <p>+33 85 89 32 10 25</p>
             <p>littlelemon@restaurant.com</p>
         </div>
         <div>

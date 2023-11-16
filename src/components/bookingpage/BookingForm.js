@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import {Link} from 'react-router-dom'
 import '../../App.css'
+import SuccesModal from '../modals/SuccesModal'
 
-export default function BookingForm(props) {
+export default function BookingForm({availableTimes,updateTimes}) {
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
   const [email,setEmail] = useState('')
@@ -13,47 +13,55 @@ export default function BookingForm(props) {
   const [comment,setComment] = useState('')
 
   const [finalTime, setFinalTime] = useState(
-    props.availableTimes.map((times) => <option>{times}</option>)
+    availableTimes.map((times) => <option>{times}</option>)
   );
 
 function handleDateChange(e){
   setDate(e.target.value);
-  var stringify = e.target.value;
+  const stringify = e.target.value;
   const date = new Date(stringify);
-  props.updateTimes(date);
-  setFinalTime(props.availableTimes.map((times) => <option>{times}</option>));
+  updateTimes(date);
+  setFinalTime(availableTimes.map((times) => <option>{times}</option>));
+
+
+ 
 }
 
-// const clearForm = () => {
-//   setFirstName("");
-//   setLastName("");
-//   setEmail("");
-//   setTelephone("");
-//   setGuest("");
-//   setOccasion("");
-//   setDate("");
-//   setComment("");
-// };
+const clearForm = () => {
+  setFirstName("");
+  setLastName("");
+  setEmail("");
+  setTelephone("");
+  setGuest("");
+  setOccasion("");
+  setDate("");
+  setComment("");
+};
 
-// const handleSubmit = (e) => {
-//   e.preventDefault();
-//   alert("Reservation success!");
-//   clearForm();
-// };
+const handleBooking = (e) => {
+  e.preventDefault();
+  setIsModalOpen(true);
+  clearForm();
+};
 
+const [isModalOpen, setIsModalOpen] = useState(false);
+const closeModal = () => {
+  setIsModalOpen(false);
+}
   return (
     <>
-      <div className="form">
-      <form className='form-body'>
-        <fieldset>
-      <div>
+    <div className="form-container">
+      <form onSubmit={handleBooking}>
+        <fieldset className="booking-container">
+        <div className="form-row">
            <label  htmlFor='firstName'>
-             First name <sup>*</sup>
+             First name *
            </label>
            <input
-             id='firstName'
-             minLength={2}
-             maxLength={50}
+           id='firstName'
+             required
+             min={2}
+             max={50}
              value={firstName}
              onChange={(e) => {
                setFirstName(e.target.value);
@@ -61,9 +69,10 @@ function handleDateChange(e){
              placeholder="First name"
            />
          </div>
-         <div>
+         <div className="form-row">
            <label htmlFor='lastName'>Last name</label>
            <input
+           required
              id='lastName'
              minLength={2}
              maxLength={50}
@@ -74,9 +83,9 @@ function handleDateChange(e){
              placeholder="Last name"
            />
          </div>
-         <div>
+         <div className="form-row">
            <label  htmlFor='email'>
-             Email address <sup>*</sup>
+             Email address *
            </label>
            <input
             id='email'
@@ -91,9 +100,9 @@ function handleDateChange(e){
              placeholder="Email address"
            />
          </div>
-         <div>
+         <div className="form-row">
            <label  htmlFor='telephone'>
-            Phone number <sup>*</sup>
+            Phone number *
            </label>
            <input
            id='telephone'
@@ -108,9 +117,9 @@ function handleDateChange(e){
              placeholder="Phone number"
            />
          </div>
-         <div>
+         <div className="form-row">
            <label  htmlFor='guest'>
-            Guest <sup>*</sup>
+            Guest *
            </label>
            <input
            id='guest'
@@ -125,26 +134,26 @@ function handleDateChange(e){
              placeholder="Guest"
            />
          </div>
-         <div>
+         <div className="form-row">
            <label htmlFor='date'>
-             Date <sup>*</sup>
+             Date *
            </label>
            <input
            id='date'
             type='date'
             required
              value={date}
-             onChange={{handleDateChange}}
+             onChange={handleDateChange}
              placeholder="Date"
            />
          </div>
-         <div>
-          <label htmlFor='time'>Time</label>
+         <div className="form-row">
+          <label htmlFor='time'>Time *</label>
           <select id='time' required>
              {finalTime}
           </select>
          </div>
-         <div>
+         <div className="form-row">
           <label htmlFor='occasion'>Occasion</label>
           <select id='occasion'
           value={occasion}
@@ -157,7 +166,7 @@ function handleDateChange(e){
             <option>Other</option>
           </select>
          </div>
-        <div>
+         <div className="form-row">
           <label htmlFor='comment'>Comment</label>
           <textarea id='comment'
           value={comment}
@@ -166,13 +175,11 @@ function handleDateChange(e){
           onChange={(e) => setComment(e.target.value)}>
           </textarea>
         </div>
-        <Link className='book-button' to='/confirmation'>
-            Book table
-      </Link>
-        </fieldset>
-   
+        <button className='button' type='submit'>Book Table</button>
 
-      </form>
+      <SuccesModal isOpen={isModalOpen} closeModal={closeModal} />
+        </fieldset>
+        </form>
       </div>
     </>
   )
